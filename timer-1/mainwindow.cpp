@@ -12,20 +12,28 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     button[0] = new QPushButton("LED 1",this);
     button[0]->setCheckable(true);
+
     label[0] = new QLabel("Off",this);
     label[0]->move(button[0]->pos()+QPoint(button[0]->width()+5,0));
+
     m_console->move(button[0]->pos()+QPoint(0,button[0]->height()+5));
     m_console->setEnabled(true);
 
     connect(button[0],SIGNAL(toggled(bool)),this,SLOT(onbutton1Press(bool)));
+
     m_led_state[0] = 0;
     m_led_state[1] = 0;
     m_led_state[2] = 0;
     QTimer *timer = new QTimer(this);
+
     connect(timer, SIGNAL(timeout()), this, SLOT(readData()));
-    timer->start(100);
+    timer->start(80);
+
     banimate->move(QPoint(200,200));
     //setFixedSize(800,600);
+
+    this->setMinimumHeight(500);
+    this->setMinimumWidth(500);
 }
 
 MainWindow::~MainWindow()
@@ -72,9 +80,14 @@ void MainWindow::readData()
     //const QByteArray data = m_serial->readAll();
     //m_buffer = QString("%1" ).arg( QDateTime::currentDateTime().toTime_t() );
     //processMessage(m_buffer);
-    banimate->addToOrigin(QPoint(1,1));
-    banimate->repaint();
+
+    //banimate->addToOrigin(QPoint(1,1)); // where the ball gets moved
+    banimate->setMove(2,2);
+    banimate->repaint(); // repain the ball
+
     processMessage(QString("%1 %2").arg(count).arg(QDateTime::currentDateTime().toTime_t() ));
     count++;
     m_buffer = "";
+
 }
+
